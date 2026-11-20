@@ -1,4 +1,10 @@
-.idea
 node_modules
+dist
+*.local
 
-/dist
+.yarn/*
+!.yarn/patches
+!.yarn/plugins
+!.yarn/releases
+!.yarn/sdks
+!.yarn/versions
