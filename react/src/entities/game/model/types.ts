@@ -11,8 +11,15 @@ export interface GameState {
   timeLeftMs: number;
 }
 
+export enum GameActionType {
+  Start = 'START',
+  Flip = 'FLIP',
+  Tick = 'TICK',
+  Reset = 'RESET',
+}
+
 export type GameAction =
-  | { type: 'START'; pairsCount: number }
-  | { type: 'FLIP'; uid: string }
-  | { type: 'TICK'; deltaMs: number }
-  | { type: 'RESET' };
+  | { type: GameActionType.Start; pairsCount: number }
+  | { type: GameActionType.Flip; uid: string }
+  | { type: GameActionType.Tick; deltaMs: number }
+  | { type: GameActionType.Reset };

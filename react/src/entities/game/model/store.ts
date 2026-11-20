@@ -1,7 +1,7 @@
 import { create } from 'zustand';
 
 import { createInitialState, gameReducer } from './reducer';
-import type { GameAction, GameState } from './types';
+import { GameActionType, type GameAction, type GameState } from './types';
 
 interface GameStore extends GameState {
   start: (pairsCount: number) => void;
@@ -15,9 +15,9 @@ export const useGameStore = create<GameStore>((set) => {
 
   return {
     ...createInitialState(),
-    start: (pairsCount) => dispatch({ type: 'START', pairsCount }),
-    flip: (uid) => dispatch({ type: 'FLIP', uid }),
-    reset: () => dispatch({ type: 'RESET' }),
-    tick: (deltaMs) => dispatch({ type: 'TICK', deltaMs }),
+    start: (pairsCount) => dispatch({ type: GameActionType.Start, pairsCount }),
+    flip: (uid) => dispatch({ type: GameActionType.Flip, uid }),
+    reset: () => dispatch({ type: GameActionType.Reset }),
+    tick: (deltaMs) => dispatch({ type: GameActionType.Tick, deltaMs }),
   };
 });

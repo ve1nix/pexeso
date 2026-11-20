@@ -2,7 +2,7 @@ import type { CardFace } from 'entities/card/model/types';
 import { GAME_CONFIG } from 'shared/config/game';
 
 import { createDeck } from './deck';
-import type { GameAction, GameState } from './types';
+import { GameActionType, type GameAction, type GameState } from './types';
 
 export const createInitialState = (): GameState => ({
   phase: 'setup',
@@ -18,7 +18,7 @@ const isFaceMatched = (state: GameState, face: CardFace): boolean =>
 
 export function gameReducer(state: GameState, action: GameAction): GameState {
   switch (action.type) {
-    case 'START':
+    case GameActionType.Start:
       return {
         ...createInitialState(),
         phase: 'playing',
@@ -26,7 +26,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         pairsCount: action.pairsCount,
       };
 
-    case 'FLIP': {
+    case GameActionType.Flip: {
       if (state.phase !== 'playing') {
         return state;
       }
@@ -62,7 +62,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       };
     }
 
-    case 'TICK': {
+    case GameActionType.Tick: {
       if (state.phase !== 'playing') {
         return state;
       }
@@ -71,7 +71,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       return timeLeftMs === 0 ? createInitialState() : { ...state, timeLeftMs };
     }
 
-    case 'RESET':
+    case GameActionType.Reset:
       return createInitialState();
 
     default:
