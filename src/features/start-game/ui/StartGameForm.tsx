@@ -1,6 +1,7 @@
 import { useState, type FormEvent } from 'react';
 
 import { GAME_CONFIG } from 'shared/config/game';
+import { PAIRS_OPTIONS } from 'shared/lib/pairs';
 import { isValidPairsCount } from 'shared/lib/validation';
 import { Button } from 'shared/ui/Button';
 
@@ -9,14 +10,6 @@ import styles from './StartGameForm.module.css';
 interface StartGameFormProps {
   onSubmit: (pairsCount: number) => void;
 }
-
-const PRESETS = Array.from(
-  {
-    length:
-      (GAME_CONFIG.maxPairsCount - GAME_CONFIG.minPairsCount) / GAME_CONFIG.pairsCountStep + 1,
-  },
-  (_, index) => GAME_CONFIG.minPairsCount + index * GAME_CONFIG.pairsCountStep,
-);
 
 export const StartGameForm = ({ onSubmit }: StartGameFormProps) => {
   const [value, setValue] = useState(String(GAME_CONFIG.defaultPairsCount));
@@ -62,7 +55,7 @@ export const StartGameForm = ({ onSubmit }: StartGameFormProps) => {
         </div>
 
         <div className={styles.presets} role="group" aria-label="Быстрый выбор числа пар">
-          {PRESETS.map((pairs) => (
+          {PAIRS_OPTIONS.map((pairs) => (
             <button
               key={pairs}
               type="button"
