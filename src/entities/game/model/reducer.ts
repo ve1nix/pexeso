@@ -20,6 +20,30 @@ export const createInitialState = (): GameState => ({
 const isFaceMatched = (state: GameState, face: CardFace): boolean =>
   state.matchedFaces.includes(face);
 
+const getPreviousOpenCards = (openCardUids: string[]): string[] => {
+  if (openCardUids.length === 2) {
+    return [];
+  }
+
+  return openCardUids;
+};
+
+const getPhaseAfterMatch = (matchedCount: number, pairsCount: number): GamePhase => {
+  if (matchedCount === pairsCount) {
+    return GamePhase.Won;
+  }
+
+  return GamePhase.Playing;
+};
+
+const getStateAfterTick = (state: GameState, timeLeftMs: number): GameState => {
+  if (timeLeftMs === 0) {
+    return createInitialState();
+  }
+
+  return { ...state, timeLeftMs };
+};
+
 export function gameReducer(state: GameState, action: GameAction): GameState {
   switch (action.type) {
     case GameActionType.Start:
@@ -42,7 +66,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         return state;
       }
 
-      const previousOpen = state.openCardUids.length === 2 ? [] : state.openCardUids;
+      const previousOpen = getPreviousOpenCards(state.openCardUids);
       const openCardUids = [...previousOpen, card.uid];
       const flips = state.flips + 1;
 
@@ -66,7 +90,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         openCardUids: [],
         matchedFaces,
         flips,
-        phase: matchedFaces.length === state.pairsCount ? GamePhase.Won : GamePhase.Playing,
+        phase: getPhaseAfterMatch(matchedFaces.length, state.pairsCount),
       };
     }
 
@@ -76,7 +100,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
       }
 
       const timeLeftMs = Math.max(0, state.timeLeftMs - action.deltaMs);
-      return timeLeftMs === 0 ? createInitialState() : { ...state, timeLeftMs };
+      return getStateAfterTick(state, timeLeftMs);
     }
 
     case GameActionType.Reset:

@@ -7,12 +7,20 @@ interface StarsProps {
   max?: number;
 }
 
+const getStarClassName = (index: number, value: number): string => {
+  if (index < value) {
+    return styles.filled;
+  }
+
+  return styles.empty;
+};
+
 export const Stars = ({ value, max = RATING_CONFIG.maxStars }: StarsProps) => (
   <span className={styles.stars} aria-label={`${value} из ${max} звёзд`}>
     {Array.from({ length: max }, (_, index) => (
       <span
         key={index}
-        className={index < value ? styles.filled : styles.empty}
+        className={getStarClassName(index, value)}
         aria-hidden="true"
       >
         ✦

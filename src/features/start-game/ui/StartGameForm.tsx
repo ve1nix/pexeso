@@ -11,6 +11,14 @@ interface StartGameFormProps {
   onSubmit: (pairsCount: number) => void;
 }
 
+const getPresetClassName = (value: string, pairs: number): string => {
+  if (Number(value) === pairs) {
+    return `${styles.preset} ${styles.presetActive}`;
+  }
+
+  return styles.preset;
+};
+
 export const StartGameForm = ({ onSubmit }: StartGameFormProps) => {
   const [value, setValue] = useState(String(GAME_CONFIG.defaultPairsCount));
 
@@ -59,7 +67,7 @@ export const StartGameForm = ({ onSubmit }: StartGameFormProps) => {
             <button
               key={pairs}
               type="button"
-              className={`${styles.preset} ${Number(value) === pairs ? styles.presetActive : ''}`}
+              className={getPresetClassName(value, pairs)}
               onClick={() => setValue(String(pairs))}
             >
               {pairs}

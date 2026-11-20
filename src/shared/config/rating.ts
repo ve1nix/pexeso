@@ -1,4 +1,29 @@
-export const RATING_CONFIG = {
+export type RankId = 'wood' | 'bronze' | 'silver' | 'gold' | 'platinum' | 'diamond' | 'legend';
+
+export interface Rank {
+  id: RankId;
+  name: string;
+  minXp: number;
+  color: string;
+}
+
+interface StarThresholds {
+  three: number;
+  two: number;
+}
+
+interface RatingConfig {
+  scoreBasePerPair: number;
+  accuracyWeight: number;
+  timeWeight: number;
+  maxStars: number;
+  starThresholds: StarThresholds;
+  xpPerScore: number;
+  storageKey: string;
+  ranks: readonly Rank[];
+}
+
+export const RATING_CONFIG: RatingConfig = {
   scoreBasePerPair: 100,
   accuracyWeight: 0.5,
   timeWeight: 0.5,
@@ -15,7 +40,4 @@ export const RATING_CONFIG = {
     { id: 'diamond', name: 'Алмаз', minXp: 55_000, color: '#8fd0ff' },
     { id: 'legend', name: 'Легенда', minXp: 90_000, color: '#ff8a5c' },
   ],
-} as const;
-
-export type RankId = (typeof RATING_CONFIG.ranks)[number]['id'];
-export type Rank = (typeof RATING_CONFIG.ranks)[number];
+};
