@@ -1,6 +1,5 @@
-import { CARD_FACES } from 'entities/card/model/cards';
-import type { Card } from 'entities/card/model/types';
 import { shuffle } from 'shared/lib/shuffle';
+import { CARD_FACES, type Card } from 'shared/model/card';
 
 export const createDeck = (pairsCount: number): Card[] => {
   const faces = shuffle(CARD_FACES).slice(0, pairsCount);

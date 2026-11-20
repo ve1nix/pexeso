@@ -1,4 +1,4 @@
-import type { CardFace } from './types';
+import type { CardFace } from 'shared/model/card';
 
 export interface CardPalette {
   artFrom: string;

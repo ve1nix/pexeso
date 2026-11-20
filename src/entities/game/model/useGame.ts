@@ -2,6 +2,7 @@ import { useEffect } from 'react';
 import { useShallow } from 'zustand/react/shallow';
 
 import { useGameStore } from './store';
+import { GamePhase } from './types';
 
 const TICK_INTERVAL_MS = 1000;
 
@@ -23,7 +24,7 @@ export const useGame = () => {
   const tick = useGameStore((store) => store.tick);
 
   useEffect(() => {
-    if (phase !== 'playing') {
+    if (phase !== GamePhase.Playing) {
       return;
     }
 

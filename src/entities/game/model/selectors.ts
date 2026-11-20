@@ -1,4 +1,4 @@
-import type { Card, CardStatus } from 'entities/card/model/types';
+import type { Card, CardStatus } from 'shared/model/card';
 import type { GameState } from './types';
 
 export const getCardStatus = (state: GameState, card: Card): CardStatus => {

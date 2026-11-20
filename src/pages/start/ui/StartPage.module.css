@@ -1,0 +1,16 @@
+.continue {
+  margin: 18px 0 0;
+  font-size: 14px;
+  text-align: center;
+}
+
+.continue a {
+  color: var(--gold-bright);
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.continue a:focus-visible {
+  outline: 2px solid var(--gold-bright);
+  outline-offset: 4px;
+}

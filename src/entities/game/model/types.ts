@@ -1,6 +1,10 @@
-import type { Card, CardFace } from 'entities/card/model/types';
+import type { Card, CardFace } from 'shared/model/card';
 
-export type GamePhase = 'setup' | 'playing' | 'won';
+export enum GamePhase {
+  Setup = 'setup',
+  Playing = 'playing',
+  Won = 'won',
+}
 
 export interface GameState {
   phase: GamePhase;

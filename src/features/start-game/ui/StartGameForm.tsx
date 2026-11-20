@@ -10,7 +10,13 @@ interface StartGameFormProps {
   onSubmit: (pairsCount: number) => void;
 }
 
-const PRESETS = [2, 4, 6, 8, 10];
+const PRESETS = Array.from(
+  {
+    length:
+      (GAME_CONFIG.maxPairsCount - GAME_CONFIG.minPairsCount) / GAME_CONFIG.pairsCountStep + 1,
+  },
+  (_, index) => GAME_CONFIG.minPairsCount + index * GAME_CONFIG.pairsCountStep,
+);
 
 export const StartGameForm = ({ onSubmit }: StartGameFormProps) => {
   const [value, setValue] = useState(String(GAME_CONFIG.defaultPairsCount));

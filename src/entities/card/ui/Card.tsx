@@ -1,7 +1,7 @@
-import type { CSSProperties } from 'react';
+import type { CssVariables } from 'shared/lib/cssVariables';
+import type { Card as CardEntity, CardStatus } from 'shared/model/card';
 
 import { getCardMeta } from '../model/cardMeta';
-import type { Card as CardEntity, CardStatus } from '../model/types';
 import styles from './Card.module.css';
 
 interface CardProps {
@@ -14,7 +14,7 @@ export const Card = ({ card, status, onFlip }: CardProps) => {
   const isFaceUp = status !== 'hidden';
   const meta = getCardMeta(card.face);
 
-  const paletteStyle = {
+  const paletteStyle: CssVariables = {
     '--art-from': meta.palette.artFrom,
     '--art-to': meta.palette.artTo,
     '--art-glow': meta.palette.glow,
@@ -23,7 +23,7 @@ export const Card = ({ card, status, onFlip }: CardProps) => {
     '--glyph-to': meta.palette.glyphTo,
     '--glyph-glow': meta.palette.glyphGlow,
     '--accent': meta.palette.accent,
-  } as CSSProperties;
+  };
 
   const classNames = [
     styles.cardButton,
