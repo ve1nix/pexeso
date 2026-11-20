@@ -1,9 +1,10 @@
 import { Link } from 'react-router-dom';
 
-import { getRankProgress, useRatingStore } from 'entities/rating';
+import { useRatingStore, useRatingSummary } from 'entities/rating';
 import { ROUTES } from 'shared/config/routes';
 import { PAIRS_OPTIONS } from 'shared/lib/pairs';
 import { formatDuration } from 'shared/lib/time';
+import type { DifficultyRecord } from 'shared/model/rating';
 import { Button } from 'shared/ui/Button';
 import { Stars } from 'shared/ui/Stars';
 import { PageLayout } from 'widgets/page-layout';
@@ -11,13 +12,37 @@ import { RankBadge } from 'widgets/rating-summary';
 
 import styles from './RatingPage.module.css';
 
+interface RecordRowProps {
+  pairs: number;
+  record?: DifficultyRecord;
+}
+
+const RecordRow = ({ pairs, record }: RecordRowProps) => {
+  if (record === undefined) {
+    return (
+      <tr>
+        <td>{pairs}</td>
+        <td colSpan={4}>—</td>
+      </tr>
+    );
+  }
+
+  return (
+    <tr>
+      <td>{pairs}</td>
+      <td>
+        <Stars value={record.bestStars} />
+      </td>
+      <td>{record.bestScore}</td>
+      <td>{record.fewestFlips}</td>
+      <td>{formatDuration(record.mostTimeLeftMs)}</td>
+    </tr>
+  );
+};
+
 export const RatingPage = () => {
-  const xp = useRatingStore((state) => state.xp);
-  const roundsCompleted = useRatingStore((state) => state.roundsCompleted);
-  const totalStars = useRatingStore((state) => state.totalStars);
-  const records = useRatingStore((state) => state.records);
+  const { xp, roundsCompleted, totalStars, records, rank, nextRank } = useRatingSummary();
   const resetRating = useRatingStore((state) => state.resetRating);
-  const { rank, nextRank } = getRankProgress(xp);
 
   const handleReset = () => {
     if (window.confirm('Сбросить весь рейтинг и рекорды?')) {
@@ -65,19 +90,9 @@ export const RatingPage = () => {
               </tr>
             </thead>
             <tbody>
-              {PAIRS_OPTIONS.map((pairs) => {
-                const record = records[pairs];
-
-                return (
-                  <tr key={pairs}>
-                    <td>{pairs}</td>
-                    <td>{record ? <Stars value={record.bestStars} /> : '—'}</td>
-                    <td>{record ? record.bestScore : '—'}</td>
-                    <td>{record ? record.fewestFlips : '—'}</td>
-                    <td>{record ? formatDuration(record.mostTimeLeftMs) : '—'}</td>
-                  </tr>
-                );
-              })}
+              {PAIRS_OPTIONS.map((pairs) => (
+                <RecordRow key={pairs} pairs={pairs} record={records[pairs]} />
+              ))}
             </tbody>
           </table>
         </div>

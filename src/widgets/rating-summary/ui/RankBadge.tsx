@@ -1,4 +1,5 @@
-import { getRankProgress, useRatingStore } from 'entities/rating';
+import { useRatingProgress, useRatingStore } from 'entities/rating';
+import type { Rank } from 'shared/config/rating';
 
 import styles from './RankBadge.module.css';
 
@@ -6,12 +7,28 @@ interface RankBadgeProps {
   compact?: boolean;
 }
 
+const getBadgeClassName = (compact: boolean): string => {
+  if (compact) {
+    return `${styles.badge} ${styles.compact}`;
+  }
+
+  return styles.badge;
+};
+
+const getRankHint = (nextRank: Rank | null, xp: number): string => {
+  if (nextRank === null) {
+    return 'Вы достигли высшего ранга';
+  }
+
+  return `До ранга «${nextRank.name}» — ${(nextRank.minXp - xp).toLocaleString('ru-RU')} XP`;
+};
+
 export const RankBadge = ({ compact = false }: RankBadgeProps) => {
   const xp = useRatingStore((state) => state.xp);
-  const { rank, nextRank, progress } = getRankProgress(xp);
+  const { rank, nextRank, progress } = useRatingProgress();
 
   return (
-    <div className={`${styles.badge} ${compact ? styles.compact : ''}`}>
+    <div className={getBadgeClassName(compact)}>
       <div className={styles.head}>
         <span className={styles.gem} style={{ backgroundColor: rank.color }} aria-hidden="true" />
         <span className={styles.name}>{rank.name}</span>
@@ -28,11 +45,7 @@ export const RankBadge = ({ compact = false }: RankBadgeProps) => {
         <div className={styles.fill} style={{ width: `${progress * 100}%` }} />
       </div>
       {!compact && (
-        <p className={styles.hint}>
-          {nextRank
-            ? `До ранга «${nextRank.name}» — ${(nextRank.minXp - xp).toLocaleString('ru-RU')} XP`
-            : 'Вы достигли высшего ранга'}
-        </p>
+        <p className={styles.hint}>{getRankHint(nextRank, xp)}</p>
       )}
     </div>
   );

@@ -1,8 +1,8 @@
 import { Navigate, useNavigate } from 'react-router-dom';
 
-import { GamePhase, getRoundResult, useGame } from 'entities/game';
+import { GamePhase, useGame, useRoundResult } from 'entities/game';
+import { getGainedXp } from 'entities/rating';
 import { useRecordRound } from 'features/record-rating';
-import { RATING_CONFIG } from 'shared/config/rating';
 import { ROUTES } from 'shared/config/routes';
 import { formatDuration } from 'shared/lib/time';
 import { Button } from 'shared/ui/Button';
@@ -13,18 +13,27 @@ import { RankBadge } from 'widgets/rating-summary';
 
 import styles from './GamePage.module.css';
 
+const LOW_TIME_MS = 10_000;
+
+const getManaClassName = (timeLeftMs: number): string => {
+  if (timeLeftMs <= LOW_TIME_MS) {
+    return `${styles.manaCrystal} ${styles.manaLow}`;
+  }
+
+  return styles.manaCrystal;
+};
+
 export const GamePage = () => {
   const { state, start, flip, reset } = useGame();
   const navigate = useNavigate();
 
   useRecordRound();
+  const result = useRoundResult();
+  const gainedXp = getGainedXp(result);
 
   if (state.phase === GamePhase.Setup) {
     return <Navigate to={ROUTES.home} replace />;
   }
-
-  const result = state.phase === GamePhase.Won ? getRoundResult(state) : null;
-  const gainedXp = result ? Math.round(result.score * RATING_CONFIG.xpPerScore) : 0;
 
   const handleNewGame = () => {
     reset();
@@ -55,9 +64,7 @@ export const GamePage = () => {
         <div className={`${styles.hudGroup} ${styles.hudTime}`}>
           <span className={styles.hudLabel}>Время</span>
           <div className={styles.manaWrap}>
-            <div
-              className={`${styles.manaCrystal} ${state.timeLeftMs <= 10000 ? styles.manaLow : ''}`}
-            >
+            <div className={getManaClassName(state.timeLeftMs)}>
               <span className={styles.manaValue}>{formatDuration(state.timeLeftMs)}</span>
             </div>
           </div>
