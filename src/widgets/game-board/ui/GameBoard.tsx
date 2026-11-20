@@ -1,8 +1,6 @@
-import type { CSSProperties } from 'react';
-
-import { Card } from 'entities/card/ui/Card';
-import { getCardStatus } from 'entities/game/model/selectors';
-import type { GameState } from 'entities/game/model/types';
+import { Card } from 'entities/card';
+import { getCardStatus, type GameState } from 'entities/game';
+import type { CssVariables } from 'shared/lib/cssVariables';
 
 import styles from './GameBoard.module.css';
 
@@ -11,18 +9,25 @@ interface GameBoardProps {
   onFlip: (uid: string) => void;
 }
 
+const COMPACT_BOARD_SIZE = 4;
+const MEDIUM_BOARD_SIZE = 12;
+
 const getColumns = (cardsCount: number): number => {
-  if (cardsCount <= 4) return 2;
-  if (cardsCount <= 12) return 4;
+  if (cardsCount <= COMPACT_BOARD_SIZE) return 2;
+  if (cardsCount <= MEDIUM_BOARD_SIZE) return 4;
   return 5;
 };
+
+const getFieldStyle = (cardsCount: number): CssVariables => ({
+  '--columns': getColumns(cardsCount),
+});
 
 export const GameBoard = ({ state, onFlip }: GameBoardProps) => (
   <div className={styles.board}>
     <div className={styles.boardInner}>
       <ul
         className={styles.field}
-        style={{ '--columns': getColumns(state.cards.length) } as CSSProperties}
+        style={getFieldStyle(state.cards.length)}
       >
         {state.cards.map((card) => (
           <Card
