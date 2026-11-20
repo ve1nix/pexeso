@@ -10,6 +10,14 @@ interface StartGameFormProps {
   onSubmit: (pairsCount: number) => void;
 }
 
+const PRESETS = Array.from(
+  {
+    length:
+      (GAME_CONFIG.maxPairsCount - GAME_CONFIG.minPairsCount) / GAME_CONFIG.pairsCountStep + 1,
+  },
+  (_, index) => GAME_CONFIG.minPairsCount + index * GAME_CONFIG.pairsCountStep,
+);
+
 export const StartGameForm = ({ onSubmit }: StartGameFormProps) => {
   const [value, setValue] = useState(String(GAME_CONFIG.defaultPairsCount));
 
@@ -23,23 +31,53 @@ export const StartGameForm = ({ onSubmit }: StartGameFormProps) => {
   };
 
   return (
-    <form className={styles.form} onSubmit={handleSubmit}>
-      <label className={styles.label} htmlFor="pairs-count">
-        Количество пар
-      </label>
-      <input
-        id="pairs-count"
-        className={styles.input}
-        type="number"
-        min={GAME_CONFIG.minPairsCount}
-        max={GAME_CONFIG.maxPairsCount}
-        step={GAME_CONFIG.pairsCountStep}
-        value={value}
-        onChange={(event) => setValue(event.target.value)}
-      />
-      <Button type="submit" className={styles.button}>
-        Начать игру
-      </Button>
-    </form>
+    <section className={styles.panel}>
+      <span className={styles.portrait} aria-hidden="true">
+        ✦
+      </span>
+      <h2 className={styles.heading}>Новая партия</h2>
+      <p className={styles.description}>Выберите число пар рун и проверьте свою память</p>
+
+      <form className={styles.form} onSubmit={handleSubmit}>
+        <label className={styles.label} htmlFor="pairs-count">
+          Количество пар
+        </label>
+
+        <div className={styles.field}>
+          <div className={styles.control}>
+            <input
+              id="pairs-count"
+              className={styles.input}
+              type="number"
+              min={GAME_CONFIG.minPairsCount}
+              max={GAME_CONFIG.maxPairsCount}
+              step={GAME_CONFIG.pairsCountStep}
+              value={value}
+              onChange={(event) => setValue(event.target.value)}
+            />
+          </div>
+          <span className={styles.controlHint}>
+            {GAME_CONFIG.minPairsCount} — {GAME_CONFIG.maxPairsCount}
+          </span>
+        </div>
+
+        <div className={styles.presets} role="group" aria-label="Быстрый выбор числа пар">
+          {PRESETS.map((pairs) => (
+            <button
+              key={pairs}
+              type="button"
+              className={`${styles.preset} ${Number(value) === pairs ? styles.presetActive : ''}`}
+              onClick={() => setValue(String(pairs))}
+            >
+              {pairs}
+            </button>
+          ))}
+        </div>
+
+        <Button type="submit" className={styles.button}>
+          Начать игру
+        </Button>
+      </form>
+    </section>
   );
 };

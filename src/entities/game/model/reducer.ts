@@ -1,11 +1,11 @@
-import type { CardFace } from 'entities/card/model/types';
+import type { CardFace } from 'shared/model/card';
 import { GAME_CONFIG } from 'shared/config/game';
 
 import { createDeck } from './deck';
-import { GameActionType, type GameAction, type GameState } from './types';
+import { GameActionType, GamePhase, type GameAction, type GameState } from './types';
 
 export const createInitialState = (): GameState => ({
-  phase: 'setup',
+  phase: GamePhase.Setup,
   cards: [],
   openCardUids: [],
   matchedFaces: [],
@@ -21,13 +21,13 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
     case GameActionType.Start:
       return {
         ...createInitialState(),
-        phase: 'playing',
+        phase: GamePhase.Playing,
         cards: createDeck(action.pairsCount),
         pairsCount: action.pairsCount,
       };
 
     case GameActionType.Flip: {
-      if (state.phase !== 'playing') {
+      if (state.phase !== GamePhase.Playing) {
         return state;
       }
 
@@ -58,12 +58,12 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         ...state,
         openCardUids: [],
         matchedFaces,
-        phase: matchedFaces.length === state.pairsCount ? 'won' : 'playing',
+        phase: matchedFaces.length === state.pairsCount ? GamePhase.Won : GamePhase.Playing,
       };
     }
 
     case GameActionType.Tick: {
-      if (state.phase !== 'playing') {
+      if (state.phase !== GamePhase.Playing) {
         return state;
       }
 
