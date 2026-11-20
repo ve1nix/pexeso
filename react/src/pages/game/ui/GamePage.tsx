@@ -12,7 +12,7 @@ export const GamePage = () => {
 
   return (
     <main className={styles.page}>
-      <h1 className={styles.title}>PAIRS</h1>
+      <h1 className={styles.title}>Pexeso</h1>
 
       {state.phase === 'won' && <p className={styles.result}>Все пары найдены!</p>}
 
