@@ -1,0 +1,16 @@
+.stars {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 28px;
+  line-height: 1;
+}
+
+.filled {
+  color: #ffd45e;
+  text-shadow: 0 0 14px rgba(255, 190, 60, 0.9);
+}
+
+.empty {
+  color: rgba(226, 189, 107, 0.28);
+}

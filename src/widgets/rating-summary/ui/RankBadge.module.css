@@ -1,0 +1,75 @@
+.badge {
+  width: 100%;
+  max-width: 420px;
+  padding: 12px 16px;
+  border: 1px solid rgba(226, 189, 107, 0.35);
+  border-radius: 8px;
+  background: linear-gradient(180deg, rgba(10, 5, 3, 0.6), rgba(44, 24, 12, 0.6));
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.gem {
+  width: 14px;
+  height: 14px;
+  border: 1px solid rgba(255, 240, 200, 0.8);
+  box-shadow: 0 0 10px rgba(255, 220, 150, 0.5);
+  transform: rotate(45deg);
+}
+
+.name {
+  color: var(--gold-bright);
+  font-family: var(--font-display);
+  font-size: 16px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.xp {
+  margin-left: auto;
+  color: #c9a86a;
+  font-size: 12px;
+}
+
+.track {
+  height: 6px;
+  margin-top: 8px;
+  overflow: hidden;
+  border-radius: 3px;
+  background: rgba(0, 0, 0, 0.5);
+}
+
+.fill {
+  height: 100%;
+  background: linear-gradient(90deg, #8a5f1d, var(--gold-bright));
+  transition: width 0.3s ease;
+}
+
+.hint {
+  margin: 8px 0 0;
+  color: #c9a86a;
+  font-size: 11px;
+  text-align: center;
+}
+
+.compact {
+  max-width: 220px;
+  padding: 8px 12px;
+}
+
+.compact .name {
+  font-size: 13px;
+}
+
+.compact .xp {
+  font-size: 11px;
+}
+
+.compact .track {
+  height: 4px;
+  margin-top: 6px;
+}

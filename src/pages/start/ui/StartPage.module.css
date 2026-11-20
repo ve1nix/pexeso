@@ -1,3 +1,24 @@
+.rating {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 10px;
+  width: 100%;
+  margin-top: 22px;
+}
+
+.rating a {
+  color: var(--gold-bright);
+  font-size: 14px;
+  text-decoration: underline;
+  text-underline-offset: 3px;
+}
+
+.rating a:focus-visible {
+  outline: 2px solid var(--gold-bright);
+  outline-offset: 4px;
+}
+
 .continue {
   margin: 18px 0 0;
   font-size: 14px;
