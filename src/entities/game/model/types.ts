@@ -13,6 +13,9 @@ export interface GameState {
   matchedFaces: CardFace[];
   pairsCount: number;
   timeLeftMs: number;
+  flips: number;
+  mistakes: number;
+  roundId: string;
 }
 
 export enum GameActionType {
@@ -23,7 +26,7 @@ export enum GameActionType {
 }
 
 export type GameAction =
-  | { type: GameActionType.Start; pairsCount: number }
+  | { type: GameActionType.Start; pairsCount: number; roundId: string }
   | { type: GameActionType.Flip; uid: string }
   | { type: GameActionType.Tick; deltaMs: number }
   | { type: GameActionType.Reset };

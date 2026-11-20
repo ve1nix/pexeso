@@ -3,5 +3,6 @@ export const GAME_CONFIG = {
   minPairsCount: 2,
   maxPairsCount: 10,
   pairsCountStep: 2,
-  roundDurationMs: 30_000,
+  roundBaseDurationMs: 5_000,
+  roundDurationPerPairMs: 5_000,
 } as const;
