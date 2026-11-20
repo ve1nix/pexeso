@@ -4,7 +4,11 @@ import { createInitialState, gameReducer } from './reducer';
 import { GameActionType, GamePhase, type GameState } from './types';
 
 const startGame = (pairsCount: number): GameState =>
-  gameReducer(createInitialState(), { type: GameActionType.Start, pairsCount });
+  gameReducer(createInitialState(), {
+    type: GameActionType.Start,
+    pairsCount,
+    roundId: 'test-round',
+  });
 
 const matchFace = (state: GameState, face: GameState['cards'][number]['face']): GameState =>
   state.cards
@@ -30,7 +34,26 @@ describe('gameReducer', () => {
 
     expect(state.matchedFaces).toEqual([face]);
     expect(state.openCardUids).toEqual([]);
+    expect(state.flips).toBe(2);
     expect(state.phase).toBe(GamePhase.Playing);
+  });
+
+  it('counts a mistake when two different faces are opened', () => {
+    const started = startGame(2);
+    const first = started.cards[0];
+    const second = started.cards.find(({ face }) => face !== first.face);
+    if (!second) {
+      throw new Error('Expected a card with a different face');
+    }
+
+    const state = [first, second].reduce(
+      (current, card) => gameReducer(current, { type: GameActionType.Flip, uid: card.uid }),
+      started,
+    );
+
+    expect(state.mistakes).toBe(1);
+    expect(state.flips).toBe(2);
+    expect(state.matchedFaces).toEqual([]);
   });
 
   it('wins after all pairs are matched', () => {

@@ -10,6 +10,38 @@ interface CardProps {
   onFlip: (uid: string) => void;
 }
 
+const getCardClassNames = (status: CardStatus): string => {
+  const names = [styles.cardButton];
+
+  if (status !== 'hidden') {
+    names.push(styles.flipped);
+  }
+  if (status === 'open') {
+    names.push(styles.open);
+  }
+  if (status === 'matched') {
+    names.push(styles.matched);
+  }
+
+  return names.join(' ');
+};
+
+const getCardLabel = (status: CardStatus, value: number): string => {
+  if (status !== 'hidden') {
+    return `Карта ${value}`;
+  }
+
+  return 'Закрытая карточка';
+};
+
+const getGlyphClassName = (value: number): string => {
+  if (value === 10) {
+    return `${styles.glyph} ${styles.glyphWide}`;
+  }
+
+  return styles.glyph;
+};
+
 export const Card = ({ card, status, onFlip }: CardProps) => {
   const isFaceUp = status !== 'hidden';
   const meta = getCardMeta(card.face);
@@ -25,23 +57,15 @@ export const Card = ({ card, status, onFlip }: CardProps) => {
     '--accent': meta.palette.accent,
   };
 
-  const classNames = [
-    styles.cardButton,
-    isFaceUp ? styles.flipped : '',
-    status === 'open' ? styles.open : '',
-    status === 'matched' ? styles.matched : '',
-  ]
-    .filter(Boolean)
-    .join(' ');
 
   return (
     <li className={styles.card}>
       <button
         type="button"
-        className={classNames}
+        className={getCardClassNames(status)}
         onClick={() => onFlip(card.uid)}
         disabled={isFaceUp}
-        aria-label={isFaceUp ? `Карта ${meta.value}` : 'Закрытая карточка'}
+        aria-label={getCardLabel(status, meta.value)}
       >
         <span className={`${styles.face} ${styles.back}`} aria-hidden="true">
           <span className={styles.backCorners} />
@@ -60,7 +84,7 @@ export const Card = ({ card, status, onFlip }: CardProps) => {
           <span className={`${styles.ornament} ${styles.ornamentTop}`} />
           <span className={styles.sigil}>
             <span className={styles.ring} />
-            <span className={`${styles.glyph} ${meta.value === 10 ? styles.glyphWide : ''}`}>
+            <span className={getGlyphClassName(meta.value)}>
               {meta.value}
             </span>
           </span>

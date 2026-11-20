@@ -1,21 +1,35 @@
 import { Navigate, useNavigate } from 'react-router-dom';
 
-import { GamePhase, useGame } from 'entities/game';
+import { GamePhase, useGame, useRoundResult } from 'entities/game';
+import { getGainedXp } from 'entities/rating';
+import { useRecordRound } from 'features/record-rating';
 import { ROUTES } from 'shared/config/routes';
+import { formatDuration } from 'shared/lib/time';
 import { Button } from 'shared/ui/Button';
+import { Stars } from 'shared/ui/Stars';
 import { GameBoard } from 'widgets/game-board';
 import { PageLayout } from 'widgets/page-layout';
+import { RankBadge } from 'widgets/rating-summary';
 
 import styles from './GamePage.module.css';
 
-const formatTime = (milliseconds: number): string => {
-  const totalSeconds = Math.ceil(milliseconds / 1000);
-  return `${String(Math.floor(totalSeconds / 60)).padStart(2, '0')}:${String(totalSeconds % 60).padStart(2, '0')}`;
+const LOW_TIME_MS = 10_000;
+
+const getManaClassName = (timeLeftMs: number): string => {
+  if (timeLeftMs <= LOW_TIME_MS) {
+    return `${styles.manaCrystal} ${styles.manaLow}`;
+  }
+
+  return styles.manaCrystal;
 };
 
 export const GamePage = () => {
   const { state, start, flip, reset } = useGame();
   const navigate = useNavigate();
+
+  useRecordRound();
+  const result = useRoundResult();
+  const gainedXp = getGainedXp(result);
 
   if (state.phase === GamePhase.Setup) {
     return <Navigate to={ROUTES.home} replace />;
@@ -42,21 +56,22 @@ export const GamePage = () => {
           </span>
         </div>
 
-        <span className={styles.motto}>Внимание · Память · Магия</span>
+        <div className={styles.hudCenter}>
+          <span className={styles.motto}>Внимание · Память · Магия</span>
+          <RankBadge compact />
+        </div>
 
         <div className={`${styles.hudGroup} ${styles.hudTime}`}>
           <span className={styles.hudLabel}>Время</span>
           <div className={styles.manaWrap}>
-            <div
-              className={`${styles.manaCrystal} ${state.timeLeftMs <= 10000 ? styles.manaLow : ''}`}
-            >
-              <span className={styles.manaValue}>{formatTime(state.timeLeftMs)}</span>
+            <div className={getManaClassName(state.timeLeftMs)}>
+              <span className={styles.manaValue}>{formatDuration(state.timeLeftMs)}</span>
             </div>
           </div>
         </div>
       </div>
 
-      {state.phase === GamePhase.Won && (
+      {result && (
         <section className={styles.victory}>
           <span className={styles.victoryMark} aria-hidden="true">
             ✦
@@ -64,6 +79,11 @@ export const GamePage = () => {
           <div className={styles.victoryBody}>
             <h2 className={styles.victoryTitle}>Победа!</h2>
             <p className={styles.victoryText}>Все пары найдены — колода покорилась вам.</p>
+            <div className={styles.result}>
+              <Stars value={result.stars} />
+              <span className={styles.resultScore}>{result.score} очков</span>
+              <span className={styles.resultXp}>+{gainedXp} XP</span>
+            </div>
           </div>
           <Button className={styles.victoryButton} onClick={handleReplay}>
             Сыграть ещё раз
