@@ -1,24 +1,281 @@
 .page {
   display: flex;
-  flex-direction: column;
+  justify-content: center;
+  align-items: flex-start;
+  min-height: 100vh;
+  padding: 40px 20px 64px;
+}
+
+.table {
+  position: relative;
+  width: min(100%, 980px);
+  padding: 34px 38px 42px;
+  border: 3px solid var(--gold-deep);
+  border-radius: 14px;
+  background:
+    radial-gradient(ellipse at 50% 0%, rgba(160, 110, 40, 0.2), transparent 60%),
+    linear-gradient(180deg, rgba(46, 24, 12, 0.97), rgba(18, 9, 5, 0.98));
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 220, 150, 0.22),
+    inset 0 0 60px rgba(0, 0, 0, 0.5),
+    0 0 0 6px rgba(18, 9, 5, 0.92),
+    0 0 0 8px rgba(180, 130, 50, 0.45),
+    0 24px 60px rgba(0, 0, 0, 0.7);
+}
+
+.table::before {
+  position: absolute;
+  inset: 7px;
+  border: 1px solid rgba(226, 189, 107, 0.28);
+  border-radius: 8px;
+  background:
+    radial-gradient(circle at 9px 9px, var(--gold) 0 3px, transparent 4px),
+    radial-gradient(circle at calc(100% - 9px) 9px, var(--gold) 0 3px, transparent 4px),
+    radial-gradient(circle at 9px calc(100% - 9px), var(--gold) 0 3px, transparent 4px),
+    radial-gradient(circle at calc(100% - 9px) calc(100% - 9px), var(--gold) 0 3px, transparent 4px);
+  pointer-events: none;
+  content: '';
+}
+
+.header {
+  margin-bottom: 24px;
+  text-align: center;
+}
+
+.logo {
+  display: inline-flex;
   align-items: center;
-  max-width: 900px;
-  margin: 0 auto;
-  padding: 30px;
+  gap: 18px;
+}
+
+.logoEmblem {
+  display: grid;
+  place-items: center;
+  width: 52px;
+  height: 52px;
+  border: 3px solid var(--gold-bright);
+  background: linear-gradient(140deg, var(--red-bright), var(--red-dark));
+  box-shadow:
+    0 0 20px rgba(200, 70, 40, 0.5),
+    inset 0 0 12px rgba(0, 0, 0, 0.55);
+  color: var(--gold-bright);
+  font-size: 26px;
+  transform: rotate(45deg);
+}
+
+.logoEmblem span {
+  line-height: 1;
+  text-shadow: 0 0 12px rgba(255, 220, 150, 0.9);
+  transform: rotate(-45deg);
 }
 
 .title {
-  margin: 0 0 20px;
-  font-size: 56px;
-  letter-spacing: 8px;
+  margin: 0;
+  background: linear-gradient(180deg, #fff3c4 0%, #e2bd6b 45%, #a8762a 100%);
+  background-clip: text;
+  color: transparent;
+  font-family: var(--font-display);
+  font-size: clamp(40px, 7vw, 62px);
+  font-weight: 900;
+  letter-spacing: 7px;
+  line-height: 1;
+  text-transform: uppercase;
+  -webkit-background-clip: text;
 }
 
-.timer,
-.result {
-  margin: 0 0 20px;
-  font-size: 24px;
+.subtitle {
+  margin: 10px 0 0;
+  color: #c9a86a;
+  font-family: var(--font-display);
+  font-size: 14px;
+  letter-spacing: 4px;
+  text-transform: uppercase;
 }
 
-.result {
+.hud {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: 22px;
+  padding: 12px 20px;
+  border: 1px solid rgba(226, 189, 107, 0.35);
+  border-radius: 8px;
+  background: linear-gradient(180deg, rgba(10, 5, 3, 0.6), rgba(44, 24, 12, 0.6));
+  box-shadow: inset 0 1px 0 rgba(255, 230, 170, 0.12);
+}
+
+.hudGroup {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  min-width: 170px;
+}
+
+.hudTime {
+  justify-content: flex-end;
+}
+
+.hudLabel {
+  color: #c9a86a;
+  font-family: var(--font-display);
+  font-size: 13px;
+  letter-spacing: 2px;
+  text-transform: uppercase;
+}
+
+.hudValue {
+  color: var(--gold-bright);
+  font-family: var(--font-display);
+  font-size: 26px;
+  font-weight: 700;
+  text-shadow: 0 0 12px rgba(255, 200, 100, 0.5);
+}
+
+.hudDivider {
+  margin: 0 6px;
+  color: #7a5618;
+}
+
+.motto {
+  color: rgba(226, 189, 107, 0.6);
+  font-family: var(--font-display);
+  font-size: 13px;
+  letter-spacing: 3px;
+  text-align: center;
+  text-transform: uppercase;
+}
+
+.manaWrap {
+  display: flex;
+  filter: drop-shadow(0 0 8px rgba(80, 170, 255, 0.6));
+}
+
+.manaCrystal {
+  position: relative;
+  display: grid;
+  place-items: center;
+  width: 72px;
+  height: 72px;
+  clip-path: polygon(50% 0%, 100% 26%, 100% 74%, 50% 100%, 0% 74%, 0% 26%);
+  background: linear-gradient(160deg, #cbeaff 0%, var(--mana) 42%, var(--mana-dark) 100%);
+}
+
+.manaCrystal::before {
+  position: absolute;
+  inset: 4px;
+  background: linear-gradient(150deg, rgba(255, 255, 255, 0.6), transparent 48%);
+  clip-path: polygon(50% 0%, 100% 26%, 100% 74%, 50% 100%, 0% 74%, 0% 26%);
+  content: '';
+}
+
+.manaLow {
+  background: linear-gradient(160deg, #ffd0b0 0%, #e2573c 42%, #6b1410 100%);
+}
+
+.manaValue {
+  position: relative;
+  color: #06263f;
+  font-family: var(--font-display);
+  font-size: 18px;
+  font-weight: 900;
+  letter-spacing: -1px;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.5);
+}
+
+.manaLow .manaValue {
+  color: #3a0805;
+  text-shadow: 0 1px 0 rgba(255, 220, 200, 0.55);
+}
+
+.victory {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+  margin-bottom: 20px;
+  padding: 16px 22px;
+  border: 2px solid var(--gold);
+  border-radius: 10px;
+  background:
+    radial-gradient(circle at 12% 50%, rgba(200, 70, 40, 0.35), transparent 45%),
+    linear-gradient(180deg, #4a2510, #241008);
+  box-shadow:
+    inset 0 0 0 1px rgba(255, 220, 150, 0.3),
+    0 0 26px rgba(220, 160, 60, 0.25);
+}
+
+.victoryMark {
+  color: var(--gold-bright);
+  font-size: 42px;
+  line-height: 1;
+  text-shadow: 0 0 18px rgba(255, 210, 120, 0.9);
+}
+
+.victoryBody {
+  flex: 1;
+}
+
+.victoryTitle {
+  margin: 0;
+  color: var(--gold-bright);
+  font-family: var(--font-display);
   font-size: 28px;
+  font-weight: 900;
+  letter-spacing: 3px;
+  text-transform: uppercase;
+}
+
+.victoryText {
+  margin: 4px 0 0;
+  color: #d9bd86;
+  font-size: 15px;
+}
+
+.victoryButton {
+  flex-shrink: 0;
+}
+
+.footnote {
+  display: flex;
+  justify-content: center;
+  margin-top: 22px;
+}
+
+.newGameButton {
+  padding: 10px 26px;
+  font-size: 15px;
+}
+
+@media (max-width: 700px) {
+  .page {
+    padding: 18px 10px 40px;
+  }
+
+  .table {
+    padding: 26px 16px 32px;
+  }
+
+  .hud {
+    flex-wrap: wrap;
+    justify-content: center;
+  }
+
+  .hudGroup {
+    min-width: 130px;
+  }
+
+  .motto {
+    order: 3;
+    width: 100%;
+  }
+
+  .victory {
+    flex-wrap: wrap;
+    justify-content: center;
+    text-align: center;
+  }
+
+  .victoryBody {
+    flex-basis: 100%;
+  }
 }

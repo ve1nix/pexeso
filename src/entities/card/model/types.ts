@@ -1,14 +1,4 @@
-export type CardFace =
-  | 'two-clubs'
-  | 'two-diamonds'
-  | 'two-hearts'
-  | 'two-spades'
-  | 'three-clubs'
-  | 'three-diamonds'
-  | 'three-hearts'
-  | 'three-spades'
-  | 'four-clubs'
-  | 'four-diamonds';
+export type CardFace = '1' | '2' | '3' | '4' | '5' | '6' | '7' | '8' | '9' | '10';
 
 export interface Card {
   uid: string;
