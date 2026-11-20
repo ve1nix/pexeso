@@ -1,4 +1,4 @@
-export { useGame } from './model/useGame';
+export { useGame, useRoundResult } from './model/useGame';
 export { useGameStore } from './model/store';
 export { getCardStatus, getRoundResult } from './model/selectors';
 export { getRoundDurationMs } from './model/duration';

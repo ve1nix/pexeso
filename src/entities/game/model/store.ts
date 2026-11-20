@@ -1,7 +1,9 @@
 import { create } from 'zustand';
 
 import { createInitialState, gameReducer } from './reducer';
-import { GameActionType, type GameAction, type GameState } from './types';
+import { GameActionType, GamePhase, type GameAction, type GameState } from './types';
+
+const TICK_INTERVAL_MS = 1000;
 
 interface GameStore extends GameState {
   start: (pairsCount: number) => void;
@@ -10,13 +12,43 @@ interface GameStore extends GameState {
   tick: (deltaMs: number) => void;
 }
 
-const createRoundId = (): string =>
-  typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function'
-    ? crypto.randomUUID()
-    : `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+const createRoundId = (): string => {
+  if (typeof crypto !== 'undefined' && typeof crypto.randomUUID === 'function') {
+    return crypto.randomUUID();
+  }
 
-export const useGameStore = create<GameStore>((set) => {
-  const dispatch = (action: GameAction) => set((state) => gameReducer(state, action));
+  return `${Date.now()}-${Math.random().toString(36).slice(2)}`;
+};
+
+export const useGameStore = create<GameStore>((set, get) => {
+  let timerId: ReturnType<typeof setInterval> | null = null;
+
+  function stopTimer() {
+    if (timerId !== null) {
+      clearInterval(timerId);
+      timerId = null;
+    }
+  }
+
+  function syncTimer(phase: GamePhase) {
+    if (phase !== GamePhase.Playing) {
+      stopTimer();
+      return;
+    }
+
+    if (timerId !== null) {
+      return;
+    }
+
+    timerId = setInterval(() => {
+      dispatch({ type: GameActionType.Tick, deltaMs: TICK_INTERVAL_MS });
+    }, TICK_INTERVAL_MS);
+  }
+
+  function dispatch(action: GameAction) {
+    set((state) => gameReducer(state, action));
+    syncTimer(get().phase);
+  }
 
   return {
     ...createInitialState(),
