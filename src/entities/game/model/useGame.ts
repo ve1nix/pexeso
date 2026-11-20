@@ -8,14 +8,29 @@ const TICK_INTERVAL_MS = 1000;
 
 export const useGame = () => {
   const state = useGameStore(
-    useShallow(({ phase, cards, openCardUids, matchedFaces, pairsCount, timeLeftMs }) => ({
-      phase,
-      cards,
-      openCardUids,
-      matchedFaces,
-      pairsCount,
-      timeLeftMs,
-    })),
+    useShallow(
+      ({
+        phase,
+        cards,
+        openCardUids,
+        matchedFaces,
+        pairsCount,
+        timeLeftMs,
+        flips,
+        mistakes,
+        roundId,
+      }) => ({
+        phase,
+        cards,
+        openCardUids,
+        matchedFaces,
+        pairsCount,
+        timeLeftMs,
+        flips,
+        mistakes,
+        roundId,
+      }),
+    ),
   );
   const { phase } = state;
   const start = useGameStore((store) => store.start);

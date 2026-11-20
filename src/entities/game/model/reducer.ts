@@ -1,7 +1,8 @@
-import type { CardFace } from 'shared/model/card';
 import { GAME_CONFIG } from 'shared/config/game';
+import type { CardFace } from 'shared/model/card';
 
 import { createDeck } from './deck';
+import { getRoundDurationMs } from './duration';
 import { GameActionType, GamePhase, type GameAction, type GameState } from './types';
 
 export const createInitialState = (): GameState => ({
@@ -10,7 +11,10 @@ export const createInitialState = (): GameState => ({
   openCardUids: [],
   matchedFaces: [],
   pairsCount: GAME_CONFIG.defaultPairsCount,
-  timeLeftMs: GAME_CONFIG.roundDurationMs,
+  timeLeftMs: getRoundDurationMs(GAME_CONFIG.defaultPairsCount),
+  flips: 0,
+  mistakes: 0,
+  roundId: '',
 });
 
 const isFaceMatched = (state: GameState, face: CardFace): boolean =>
@@ -24,6 +28,8 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         phase: GamePhase.Playing,
         cards: createDeck(action.pairsCount),
         pairsCount: action.pairsCount,
+        timeLeftMs: getRoundDurationMs(action.pairsCount),
+        roundId: action.roundId,
       };
 
     case GameActionType.Flip: {
@@ -38,19 +44,20 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
 
       const previousOpen = state.openCardUids.length === 2 ? [] : state.openCardUids;
       const openCardUids = [...previousOpen, card.uid];
+      const flips = state.flips + 1;
 
       if (openCardUids.length < 2) {
-        return { ...state, openCardUids };
+        return { ...state, openCardUids, flips };
       }
 
       const first = state.cards.find(({ uid }) => uid === openCardUids[0]);
       const second = state.cards.find(({ uid }) => uid === openCardUids[1]);
       if (!first || !second) {
-        return { ...state, openCardUids: [] };
+        return { ...state, openCardUids: [], flips };
       }
 
       if (first.face !== second.face) {
-        return { ...state, openCardUids };
+        return { ...state, openCardUids, flips, mistakes: state.mistakes + 1 };
       }
 
       const matchedFaces = [...state.matchedFaces, first.face];
@@ -58,6 +65,7 @@ export function gameReducer(state: GameState, action: GameAction): GameState {
         ...state,
         openCardUids: [],
         matchedFaces,
+        flips,
         phase: matchedFaces.length === state.pairsCount ? GamePhase.Won : GamePhase.Playing,
       };
     }
